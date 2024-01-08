@@ -1,20 +1,26 @@
+import os
 import socket
 import tqdm
 
 def listener():
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("localhost", 54321))  # Use the custom port
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Use IPv4
+    server.bind(("192.168.120.7", 54321))  # Use the correct IP address and port
     server.listen()
 
     client, addr = server.accept()
 
     file_name = client.recv(1024).decode()
-    print(file_name)
+    print("Receiving file:", file_name)
+
     file_size_bytes = client.recv(8)
     file_size = int.from_bytes(file_size_bytes, byteorder='big')
-    print(file_size)
+    print("File size:", file_size, "bytes")
 
-    file = open(file_name, "wb")
+    save_path = "/storage/emulated/0/downloads/"  # Change this to the correct path on your phone
+    os.makedirs(save_path, exist_ok=True)
+
+    file_path = os.path.join(save_path, file_name)
+    file = open(file_path, "wb")
 
     done = False
 
@@ -30,6 +36,9 @@ def listener():
         file.write(data)
         progress.update(len(data))
 
+    print("Done")
+
     file.close()
     client.close()
     server.close()
+
