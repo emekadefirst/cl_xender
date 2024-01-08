@@ -3,10 +3,10 @@ import socket
 
 def server():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(("localhost", 9999))
+    client.connect(("localhost", 54321))
 
-    file = open("The.Greatest.Beer.Run.Ever.2022.720p.WEBRip.x264.AAC-[YTS.MX].mp4", "rb")
-    file_size = os.path.getsize("The.Greatest.Beer.Run.Ever.2022.720p.WEBRip.x264.AAC-[YTS.MX].mp4")
+    file = open("file name", "rb")
+    file_size = os.path.getsize("file name")
 
     client.send("recieve_file".encode())
     client.send(str(file_size).encode())
