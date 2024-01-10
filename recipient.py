@@ -9,8 +9,16 @@ def listener():
 
     client, addr = server.accept()
 
-    file_name = client.recv(1024).decode()
-    print("Receiving file:", file_name)
+    # recipient.py
+    file_name_signal = client.recv(1024).decode()
+    if file_name_signal == "start_file_transfer":
+        file_name = client.recv(1024).decode()
+        print("Received file name:", file_name)
+        # Continue with the rest of the file transfer process
+    else:
+        print("Invalid file transfer signal")
+    # Handle the error or exit the process
+
 
     file_size_bytes = client.recv(8)
     file_size = int.from_bytes(file_size_bytes, byteorder='big')
