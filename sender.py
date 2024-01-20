@@ -2,7 +2,6 @@ import os
 import socket
 
 def server(server_ip, server_port):
-    print(server_port)
     # Get the list of files in the current directory
     files = [file for file in os.listdir() if os.path.isfile(file)]
 
