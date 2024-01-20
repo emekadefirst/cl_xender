@@ -1,7 +1,7 @@
 import os
 import socket
 
-def server(server_ip, server_port):
+def send_file(server_ip, server_port):
     # Get the list of files in the current directory
     files = [files for files in os.listdir() if os.path.isfile(files)]
 

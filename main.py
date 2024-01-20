@@ -1,5 +1,5 @@
-from sender import server
-from recipient import listener
+from sender import send_file
+from receiver import receive_file
 
 def get_server_info():
     """Gathers server IP and port information from the user."""
@@ -22,11 +22,13 @@ def main():
 
     if response == "send":
         server_ip, server_port = get_server_info()
-        server(server_ip, server_port)
+
+        send_file(server_ip, server_port)
     elif response == "receive":
         server_ip, server_port = get_server_info()
         save_path = ""
-        listener(server_ip, server_port, save_path)
+
+        receive_file(server_ip, server_port, save_path)
     else: print("Invalid request")
 
 if __name__ == "__main__":
