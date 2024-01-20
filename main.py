@@ -2,14 +2,6 @@ from sender import server
 from recipient import listener
 
 print("What action do you want to perform?")
-print("A. send")
-print("B. receive")
+response = input("Enter your choice (send/receive): ")
 
-response = input("> ")
-
-if response == "send":
-    server()
-elif response == "receive":  
-    listener()  
-else:
-    print("Invalid request")
+server() if response == "send" else listener() if response == "receive" else print("Invalid request")

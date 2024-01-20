@@ -2,6 +2,7 @@ import os
 import socket
 
 def server():
+    print
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(("192.168.120.7", 54321))
 
