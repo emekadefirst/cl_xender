@@ -1,6 +1,6 @@
 # File Transfer Project
 
-This project provides a simple file transfer mechanism between devices using Python and sockets. It includes a sender script (`sender.py`) for initiating file transfers and a recipient script (`recipient.py`) for receiving files.
+This project provides a simple file transfer mechanism between devices using Python and sockets. It includes a sender script (`sender.py`) for initiating file transfers and a recipient script (`receiver.py`) for receiving files.
 
 ## Getting Started
 
@@ -21,7 +21,7 @@ This project provides a simple file transfer mechanism between devices using Pyt
 3. connect both devices to wifi-hotspot and fetch the ip address
 4. replace ip with your actual ip excluding the port, do not termper with the port in the code 
      (("ip-address", 54321)) 
-5. do this for both sender and the recipient file
+5. do this for both sender and the receiver file
 
    
 6. run python main.py
@@ -30,7 +30,7 @@ This project provides a simple file transfer mechanism between devices using Pyt
 Project Structure
 main.py: The main script to choose between sending or receiving files.
 sender.py: The script to initiate file transfers from a sender device.
-recipient.py: The script to receive files on a recipient device.
+receiver.py: The script to receive files on a recipient device.
 Troubleshooting
 If you encounter any issues, check the IP addresses in the scripts to ensure they match your device's network configuration.
 Ensure both devices are on the same network and can reach each other.

@@ -2,7 +2,7 @@ import os
 import socket
 import tqdm
 
-def listener(server_ip, server_port, save_path="/storage/emulated/0/downloads/"):
+def receive_file(server_ip, server_port, save_path="/storage/emulated/0/downloads/"):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Use IPv4
     server.bind((server_ip, server_port))
     server.listen()

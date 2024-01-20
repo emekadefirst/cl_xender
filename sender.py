@@ -1,24 +1,48 @@
 import os
 import socket
 
-def server():
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(("192.168.120.7", 54321))
+def send_file(server_ip, server_port):
+    # Get the list of files in the current directory
+    files = [files for files in os.listdir() if os.path.isfile(files)]
 
-    file_path = "/Users/VICTOR/Desktop/cl_xender/moive.mp4"
-    file_name = os.path.basename(file_path)
+    # Filter for video files (you can customize this filter based on your needs)
+    video_files = [video for video in files if video.lower().endswith(('.mp4', '.avi', '.mkv', '.mov'))]
 
-    file = open(file_path, "rb")
+    # Check if there are any video files in the directory
+    if not video_files:
+        print("No video files found in the current directory.")
+        return
+
+    file_name = video_files[0]
+    file_path = os.path.abspath(file_name)
     file_size = os.path.getsize(file_path)
 
-    # sender.py
-    client.send("start_file_transfer".encode())
-    client.send(str(file_size).encode())
-    client.send(file_name.encode())   
+    # Create a socket
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    data = file.read()
-    client.sendall(data)
-    client.send(b"<END>")
+    try:
+        # Connect to the server
+        client.connect((server_ip, server_port))
 
-    file.close()
-    client.close()
+        # Send file transfer details
+        client.sendall(b"start_file_transfer")
+        client.sendall(str(file_size).encode())
+        client.sendall(file_name.encode())
+
+        # Open and send the file in chunks
+        with open(file_path, "rb") as file:
+            while True:
+                data = file.read(1024)
+                if not data:
+                    break
+                client.sendall(data)
+
+        # Signal the end of file transfer
+        client.sendall(b"<END>")
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    
+    finally:
+        # Close the file and the socket
+        client.close()
