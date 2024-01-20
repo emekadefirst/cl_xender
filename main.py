@@ -1,21 +1,33 @@
 from sender import server
 from recipient import listener
 
-print("What action do you want to perform?")
-response = input("Enter your choice (send/receive): ")
+def get_server_info():
+    """Gathers server IP and port information from the user."""
 
-if response == "send":
-    # Get user input for server IP and port
     server_ip = input("Enter server IP: ")
-    server_port_num = input("Enter server port: ")
+    port_number = input("Enter server port (leave blank for default): ")
 
-    # Use default port 54321 if the user didn't provide a port
-    server_port = 54321 if server_port_num == '' else int(server_port_num)
+    server_port = 54321 if not port_number else int(port_number)
 
-    # Display the default port message only when the default port is used
     if server_port == 54321:
-        print('Using default port: 54321')
-    server(server_ip, server_port)
-elif response == "receive":
-    listener()
-else: print("Invalid request")
+        print("Using default port: 54321")
+
+    return server_ip, server_port
+
+def main():
+    """Prompts the user for action and calls appropriate functions."""
+
+    print("What action do you want to perform?")
+    response = input("Enter your choice (send/receive): ")
+
+    if response == "send":
+        server_ip, server_port = get_server_info()
+        server(server_ip, server_port)
+    elif response == "receive":
+        server_ip, server_port = get_server_info()
+        save_path = ""
+        listener(server_ip, server_port, save_path)
+    else: print("Invalid request")
+
+if __name__ == "__main__":
+    main()

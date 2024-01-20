@@ -2,51 +2,50 @@ import os
 import socket
 import tqdm
 
-def listener():
+def listener(server_ip, server_port, save_path="/storage/emulated/0/downloads/"):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Use IPv4
-    server.bind(("192.168.120.7", 54321))  # Use the correct IP address and port
+    server.bind((server_ip, server_port))
     server.listen()
 
     client, addr = server.accept()
 
-    # recipient.py
-    file_name_signal = client.recv(1024).decode()
-    if file_name_signal == "start_file_transfer":
-        file_name = client.recv(1024).decode()
-        print("Received file name:", file_name)
-        # Continue with the rest of the file transfer process
-    else:
-        print("Invalid file transfer signal")
-    # Handle the error or exit the process
+    try:
+        # Verify file transfer signal
+        file_name_signal = client.recv(1024).decode()
+        if file_name_signal == "start_file_transfer":
+            file_name = client.recv(1024).decode()
+            print("Received file name:", file_name)
+        else:
+            raise ValueError("Invalid file transfer signal")
 
+        # Receive file size
+        file_size_bytes = client.recv(8)
+        file_size = int.from_bytes(file_size_bytes, byteorder='big')
+        print("File size:", file_size, "bytes")
 
-    file_size_bytes = client.recv(8)
-    file_size = int.from_bytes(file_size_bytes, byteorder='big')
-    print("File size:", file_size, "bytes")
+        os.makedirs(save_path, exist_ok=True)
+        file_path = os.path.join(save_path, file_name)
 
-    save_path = "/storage/emulated/0/downloads/"  # Change this to the correct path on your phone
-    os.makedirs(save_path, exist_ok=True)
+        with open(file_path, "wb") as file:
+            done = False
+            progress = tqdm.tqdm(unit="B", unit_scale=True, unit_divisor=1000, total=file_size)
 
-    file_path = os.path.join(save_path, file_name)
-    file = open(file_path, "wb")
+            while not done:
+                data = client.recv(1024)
+                if not data:
+                    break
+                if data[-5:] == b"<END>":
+                    done = True
+                    data = data[:-5]
+                file.write(data)
+                progress.update(len(data))
 
-    done = False
+        print("File transfer complete.")
 
-    progress = tqdm.tqdm(unit="B", unit_scale=True, unit_divisor=1000, total=file_size)
+    except Exception as e:
+        print(f"Error during file transfer: {e}")
 
-    while not done:
-        data = client.recv(1024)
-        if not data:
-            break
-        if data[-5:] == b"<END>":
-            done = True
-            data = data[:-5]
-        file.write(data)
-        progress.update(len(data))
-
-    print("Done")
-
-    file.close()
-    client.close()
-    server.close()
-
+    finally:
+        client.close()
+        server.close()
+        

@@ -3,7 +3,7 @@ import socket
 
 def server(server_ip, server_port):
     # Get the list of files in the current directory
-    files = [file for file in os.listdir() if os.path.isfile(file)]
+    files = [files for files in os.listdir() if os.path.isfile(files)]
 
     # Filter for video files (you can customize this filter based on your needs)
     video_files = [video for video in files if video.lower().endswith(('.mp4', '.avi', '.mkv', '.mov'))]
